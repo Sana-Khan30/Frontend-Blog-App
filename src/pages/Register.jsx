@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { motion } from 'framer-motion'; // Animation ke liye
+import { motion } from 'framer-motion';
 
 export default function Register() {
   const { register } = useAuth();
@@ -28,45 +28,35 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-200 px-4">
-      {/* Animated Card using Framer Motion */}
+    <div style={r.container}>
       <motion.div 
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md bg-white rounded-2xl shadow-xl shadow-slate-300/50 p-8 border border-slate-100"
+        style={r.card}
       >
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-slate-800 tracking-tight">Create account</h2>
-          <p className="text-slate-500 mt-2 text-sm">Join our community and start blogging</p>
+        <div style={r.header}>
+          <h2 style={r.title}>Create Account</h2>
+          <p style={r.subtitle}>Join the platform to start your journey</p>
         </div>
 
-        {error && (
-          <motion.div 
-            initial={{ scale: 0.95 }}
-            animate={{ scale: 1 }}
-            className="bg-red-50 border-l-4 border-red-500 text-red-700 p-3 rounded mb-6 text-sm"
-          >
-            {error}
-          </motion.div>
-        )}
+        {error && <div style={r.errorBox}>{error}</div>}
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider ml-1">Full Name</label>
+        <form onSubmit={handleSubmit} style={r.form}>
+          <div style={r.inputGroup}>
+            <label style={r.label}>Full Name</label>
             <input
               type="text"
               name="name"
-              placeholder="Maria Hussain"
+              placeholder="Sana Samad"
               value={form.name}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all duration-200 bg-slate-50/50 focus:bg-white"
+              style={r.input}
             />
           </div>
 
-          <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider ml-1">Email Address</label>
+          <div style={r.inputGroup}>
+            <label style={r.label}>Email Address</label>
             <input
               type="email"
               name="email"
@@ -74,12 +64,12 @@ export default function Register() {
               value={form.email}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all duration-200 bg-slate-50/50 focus:bg-white"
+              style={r.input}
             />
           </div>
 
-          <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider ml-1">Password</label>
+          <div style={r.inputGroup}>
+            <label style={r.label}>Password</label>
             <input
               type="password"
               name="password"
@@ -87,38 +77,85 @@ export default function Register() {
               value={form.password}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all duration-200 bg-slate-50/50 focus:bg-white"
+              style={r.input}
             />
           </div>
 
           <motion.button
-            whileHover={{ scale: 1.01 }}
+            whileHover={{ backgroundColor: "#5850ec" }}
             whileTap={{ scale: 0.98 }}
             type="submit"
             disabled={loading}
-            className={`w-full py-3.5 rounded-xl font-bold text-white shadow-lg shadow-indigo-200 transition-all ${
-              loading ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'
-            }`}
+            style={loading ? {...r.btn, opacity: 0.7} : r.btn}
           >
-            {loading ? (
-              <span className="flex items-center justify-center gap-2">
-                <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                </svg>
-                Creating account...
-              </span>
-            ) : 'Register'}
+            {loading ? "Creating Account..." : "Register Now"}
           </motion.button>
         </form>
 
-        <p className="mt-8 text-center text-sm text-slate-500">
-          Already have an account?{' '}
-          <Link to="/login" className="text-indigo-600 font-bold hover:underline">
-            Login here
-          </Link>
+        <p style={r.footer}>
+          Already have an account? <Link to="/login" style={r.link}>Login here</Link>
         </p>
       </motion.div>
     </div>
   );
 }
+
+const r = {
+  container: {
+    minHeight: "100vh",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#0a0a0a", // Charcoal Dark
+    fontFamily: "'Inter', sans-serif",
+    padding: "20px"
+  },
+  card: {
+    backgroundColor: "#161616",
+    padding: "40px",
+    borderRadius: "20px",
+    width: "100%",
+    maxWidth: "420px",
+    border: "1px solid rgba(255,255,255,0.05)",
+    boxShadow: "0 25px 50px -12px rgba(0,0,0,0.5)",
+  },
+  header: { marginBottom: "32px" },
+  title: { color: "#fff", fontSize: "28px", fontWeight: "700", marginBottom: "8px", letterSpacing: "-0.5px" },
+  subtitle: { color: "#888", fontSize: "14px" },
+  errorBox: {
+    backgroundColor: "rgba(239, 68, 68, 0.1)",
+    border: "1px solid rgba(239, 68, 68, 0.2)",
+    color: "#f87171",
+    padding: "12px",
+    borderRadius: "10px",
+    fontSize: "13px",
+    marginBottom: "20px",
+  },
+  form: { display: "flex", flexDirection: "column", gap: "18px" },
+  inputGroup: { display: "flex", flexDirection: "column", gap: "8px" },
+  label: { color: "#ccc", fontSize: "12px", fontWeight: "600", textTransform: "uppercase", letterSpacing: "1px" },
+  input: {
+    backgroundColor: "#0f0f0f",
+    border: "1px solid rgba(255,255,255,0.1)",
+    borderRadius: "12px",
+    padding: "12px 16px",
+    color: "#fff",
+    fontSize: "14px",
+    outline: "none",
+    transition: "border 0.2s",
+  },
+  btn: {
+    backgroundColor: "#4F46E5",
+    color: "#fff",
+    padding: "14px",
+    borderRadius: "12px",
+    border: "none",
+    fontSize: "15px",
+    fontWeight: "600",
+    cursor: "pointer",
+    marginTop: "10px",
+    transition: "all 0.2s",
+  },
+  footer: { marginTop: "24px", textAlign: "center", color: "#666", fontSize: "14px" },
+  link: { color: "#6366f1", textDecoration: "none", fontWeight: "600" },
+};
