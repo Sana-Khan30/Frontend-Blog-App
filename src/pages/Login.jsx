@@ -1,14 +1,17 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { motion } from "framer-motion";
+
 export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -22,15 +25,24 @@ export default function Login() {
       setLoading(false);
     }
   };
+
   return (
     <div style={s.container}>
-      <div style={s.card}>
-        <h2 style={s.title}>Welcome back</h2>
-        <p style={s.sub}>Login to your account</p>
-        {error && <p style={s.error}>{error}</p>}
+      <motion.div 
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        style={s.card}
+      >
+        <div style={s.header}>
+          <h2 style={s.title}>Welcome Back</h2>
+          <p style={s.subtitle}>Login to access your dashboard</p>
+        </div>
+
+        {error && <div style={s.errorBox}>{error}</div>}
+
         <form onSubmit={handleSubmit} style={s.form}>
-          <div style={s.field}>
-            <label style={s.label}>Email</label>
+          <div style={s.inputGroup}>
+            <label style={s.label}>Email Address</label>
             <input
               type="email"
               name="email"
@@ -41,84 +53,94 @@ export default function Login() {
               style={s.input}
             />
           </div>
-          <div style={s.field}>
+
+          <div style={s.inputGroup}>
             <label style={s.label}>Password</label>
             <input
               type="password"
               name="password"
-              placeholder="........"
+              placeholder="••••••••"
               value={form.password}
               onChange={handleChange}
               required
               style={s.input}
             />
           </div>
-          <button type="submit" disabled={loading} style={s.btn}>
-            {loading ? "Logging in..." : "Login"}
-          </button>
+
+          <motion.button
+            whileHover={{ backgroundColor: "#5850ec" }}
+            whileTap={{ scale: 0.98 }}
+            type="submit"
+            disabled={loading}
+            style={loading ? {...s.btn, opacity: 0.7} : s.btn}
+          >
+            {loading ? "Authenticating..." : "Sign In"}
+          </motion.button>
         </form>
+
         <p style={s.footer}>
-          Don't have an account?{" "}
-          <Link to="/register" style={s.link}>
-            Register here
-          </Link>
+          New here? <Link to="/register" style={s.link}>Create an account</Link>
         </p>
-      </div>
+      </motion.div>
     </div>
   );
 }
+
 const s = {
   container: {
     minHeight: "100vh",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#0a0a0a", // Charcoal Dark
+    fontFamily: "'Inter', sans-serif",
   },
   card: {
-    background: "#fff",
-    padding: "2rem",
-    borderRadius: "12px",
-    boxShadow: "0 2px 16px rgba(0,0,0,0.08)",
+    backgroundColor: "#161616", // Midnight Blue hint
+    padding: "40px",
+    borderRadius: "20px",
     width: "100%",
     maxWidth: "400px",
+    border: "1px solid rgba(255,255,255,0.05)",
+    boxShadow: "0 25px 50px -12px rgba(0,0,0,0.5)",
   },
-  title: { fontSize: "22px", fontWeight: "500", marginBottom: "4px" },
-  sub: { fontSize: "14px", color: "#888", marginBottom: "1.5rem" },
-  error: {
-    backgroundColor: "#fff0f0",
-    color: "#cc0000",
-    padding: "10px 14px",
-    borderRadius: "8px",
+  header: { marginBottom: "32px" },
+  title: { color: "#fff", fontSize: "28px", fontWeight: "700", marginBottom: "8px", letterSpacing: "-0.5px" },
+  subtitle: { color: "#888", fontSize: "14px" },
+  errorBox: {
+    backgroundColor: "rgba(239, 68, 68, 0.1)",
+    border: "1px solid rgba(239, 68, 68, 0.2)",
+    color: "#f87171",
+    padding: "12px",
+    borderRadius: "10px",
     fontSize: "13px",
-    marginBottom: "1rem",
+    marginBottom: "20px",
   },
-  form: { display: "flex", flexDirection: "column", gap: "1rem" },
-  field: { display: "flex", flexDirection: "column", gap: "6px" },
-  label: { fontSize: "13px", fontWeight: "500", color: "#444" },
+  form: { display: "flex", flexDirection: "column", gap: "20px" },
+  inputGroup: { display: "flex", flexDirection: "column", gap: "8px" },
+  label: { color: "#ccc", fontSize: "12px", fontWeight: "600", textTransform: "uppercase", letterSpacing: "1px" },
   input: {
-    padding: "10px 12px",
-    borderRadius: "8px",
-    border: "1px solid #ddd",
-    fontSize: "14px",
-    outline: "none",
-  },
-  btn: {
-    marginTop: "0.5rem",
-    padding: "11px",
-    borderRadius: "8px",
-    border: "none",
-    backgroundColor: "#4F46E5",
+    backgroundColor: "#0f0f0f",
+    border: "1px solid rgba(255,255,255,0.1)",
+    borderRadius: "12px",
+    padding: "12px 16px",
     color: "#fff",
     fontSize: "14px",
-    fontWeight: "500",
+    outline: "none",
+    transition: "border 0.2s",
+  },
+  btn: {
+    backgroundColor: "#4F46E5",
+    color: "#fff",
+    padding: "14px",
+    borderRadius: "12px",
+    border: "none",
+    fontSize: "15px",
+    fontWeight: "600",
     cursor: "pointer",
+    marginTop: "10px",
+    transition: "all 0.2s",
   },
-  footer: {
-    marginTop: "1.5rem",
-    textAlign: "center",
-    fontSize: "13px",
-    color: "#888",
-  },
-  link: { color: "#4F46E5", textDecoration: "none", fontWeight: "500" },
+  footer: { marginTop: "24px", textAlign: "center", color: "#666", fontSize: "14px" },
+  link: { color: "#6366f1", textDecoration: "none", fontWeight: "600" },
 };
