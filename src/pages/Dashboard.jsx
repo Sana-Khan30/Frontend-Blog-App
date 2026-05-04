@@ -1,68 +1,102 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { motion } from "framer-motion";
+
 export default function Dashboard() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+
   const handleLogout = async () => {
     await logout();
     navigate("/login");
   };
+
   return (
-    <div style={s.container}>
-      <div style={s.card}>
-        <h2 style={s.title}>Welcome back!</h2>
-        <p style={s.sub}>You are successfully logged in</p>
-        <div style={s.box}>
-          <p style={s.label}>NAME</p>
-          <p style={s.val}>{user?.name || "User"}</p>
-        </div>
-        <div style={s.box}>
-          <p style={s.label}>EMAIL</p>
-          <p style={s.val}>{user?.email || "email@example.com"}</p>
-        </div>
-        <button onClick={handleLogout} style={s.btn}>
-          Logout
-        </button>
+    <div style={d.container}>
+      <div style={d.wrapper}>
+        <header style={d.header}>
+          <div>
+            <h1 style={d.welcome}>Dashboard</h1>
+            <p style={d.status}>Account Active • Senior Frontend Engineer</p>
+          </div>
+          <button onClick={handleLogout} style={d.logoutBtn}>Logout</button>
+        </header>
+
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          style={d.profileCard}
+        >
+          <div style={d.userHeader}>
+            <div style={d.avatar}>{user?.name?.[0] || "S"}</div>
+            <div>
+              <h2 style={d.userName}>{user?.name || "Sana Samad"}</h2>
+              <p style={d.userEmail}>{user?.email}</p>
+            </div>
+          </div>
+
+          <div style={d.statsGrid}>
+            <div style={d.statBox}>
+              <span style={d.statLabel}>Role</span>
+              <span style={d.statValue}>Administrator</span>
+            </div>
+            <div style={d.statBox}>
+              <span style={d.statLabel}>Project Status</span>
+              <span style={d.statValue}>Live Deployment</span>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </div>
   );
 }
-const s = {
-  container: {
-    minHeight: "100vh",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#f5f5f5",
-  },
-  card: {
-    background: "#fff",
-    padding: "2rem",
-    borderRadius: "12px",
-    boxShadow: "0 2px 16px rgba(0,0,0,0.08)",
-    width: "100%",
-    maxWidth: "400px",
-  },
-  title: { fontSize: "22px", fontWeight: "500", marginBottom: "4px" },
-  sub: { fontSize: "14px", color: "#888", marginBottom: "1.5rem" },
-  box: {
-    background: "#f9f9f9",
-    padding: "12px 16px",
-    borderRadius: "8px",
-    marginBottom: "12px",
-  },
-  label: { fontSize: "11px", color: "#aaa", marginBottom: "2px" },
-  val: { fontSize: "15px", fontWeight: "500", color: "#333" },
-  btn: {
-    marginTop: "1rem",
-    width: "100%",
-    padding: "11px",
-    borderRadius: "8px",
-    border: "none",
-    backgroundColor: "#ef4444",
-    color: "#fff",
-    fontSize: "14px",
-    fontWeight: "500",
+
+const d = {
+  container: { minHeight: "100vh", backgroundColor: "#0a0a0a", padding: "40px 20px" },
+  wrapper: { maxWidth: "800px", margin: "0 auto" },
+  header: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "40px" },
+  welcome: { color: "#fff", fontSize: "24px", fontWeight: "700", margin: 0 },
+  status: { color: "#555", fontSize: "13px", marginTop: "4px" },
+  logoutBtn: { 
+    backgroundColor: "rgba(239, 68, 68, 0.1)", 
+    color: "#ef4444", 
+    border: "1px solid rgba(239, 68, 68, 0.2)", 
+    padding: "8px 16px", 
+    borderRadius: "8px", 
     cursor: "pointer",
+    fontSize: "13px",
+    fontWeight: "600"
   },
+  profileCard: {
+    backgroundColor: "#161616",
+    borderRadius: "24px",
+    padding: "32px",
+    border: "1px solid rgba(255,255,255,0.05)",
+  },
+  userHeader: { display: "flex", alignItems: "center", gap: "20px", marginBottom: "32px" },
+  avatar: { 
+    width: "60px", 
+    height: "60px", 
+    borderRadius: "16px", 
+    backgroundColor: "#4F46E5", 
+    display: "flex", 
+    alignItems: "center", 
+    justifyContent: "center",
+    fontSize: "24px",
+    fontWeight: "bold",
+    color: "#fff"
+  },
+  userName: { color: "#fff", fontSize: "20px", fontWeight: "600", margin: 0 },
+  userEmail: { color: "#888", fontSize: "14px", marginTop: "2px" },
+  statsGrid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" },
+  statBox: { 
+    backgroundColor: "#0f0f0f", 
+    padding: "16px", 
+    borderRadius: "16px", 
+    display: "flex", 
+    flexDirection: "column", 
+    gap: "4px" 
+  },
+  statLabel: { fontSize: "10px", color: "#444", fontWeight: "800", textTransform: "uppercase", letterSpacing: "1px" },
+  statValue: { fontSize: "14px", color: "#ccc", fontWeight: "500" },
 };
