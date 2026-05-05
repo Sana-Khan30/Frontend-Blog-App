@@ -17,11 +17,23 @@ export default function Register() {
     e.preventDefault();
     setError('');
     setLoading(true);
+
+    // Frontend basic validation to avoid 400 bad requests
+    if (!form.name.trim() || !form.email.trim() || !form.password.trim()) {
+      setError('All fields are required');
+      setLoading(false);
+      return;
+    }
+
     try {
-      await register(form);
+      await register({
+        name: form.name.trim(),
+        email: form.email.trim(),
+        password: form.password
+      });
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.msg || 'Something went wrong');
+      setError(err.response?.data?.msg || err.response?.data?.message || 'Something went wrong');
     } finally {
       setLoading(false);
     }
@@ -106,7 +118,7 @@ const r = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#0a0a0a", // Charcoal Dark
+    backgroundColor: "#0a0a0a",
     fontFamily: "'Inter', sans-serif",
     padding: "20px"
   },
